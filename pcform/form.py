@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
+from form_handler import form_docx_to_pdf_handler, form_saveto_docx_handler
 
 
 class App(ctk.CTk):
@@ -103,9 +105,8 @@ class FormDialog(ctk.CTkToplevel):
         self.status_label.grid(row=len(fields) + 1,
                                columnspan=2, padx=6, pady=10)
 
-        submit_button = ctk.CTkButton(self, text="Submit",
-                                      command=self.submit_form)
-
+        submit_button = ctk.CTkButton(
+            self, text="Submit", command=self.submit_form)
         submit_button.grid(row=len(fields) + 2, columnspan=2, padx=6, pady=0)
 
     def submit_form(self):
@@ -118,14 +119,13 @@ class FormDialog(ctk.CTkToplevel):
                 messagebox.showerror("Error", "Please fill out all fields.")
                 return
 
-        form_data = {
+        form_data = [{
             entry_name: entry_widget.get()
             if isinstance(entry_widget, ctk.CTkEntry)
             else entry_widget.get("1.0", "end-1c")
             for entry_name, entry_widget in self.entries.items()
         }
-        print("Form submitted successfully!")
-        print("Form Data:", form_data)
+        ]
 
         # Clear entry fields
         for entry_widget in self.entries.values():
@@ -133,6 +133,19 @@ class FormDialog(ctk.CTkToplevel):
                 entry_widget.delete(0, 'end')
             elif isinstance(entry_widget, ctk.CTkTextbox):
                 entry_widget.delete('1.0', 'end')
+
+        # Save form data to file
+
+        file_path = filedialog.asksaveasfilename(defaultextension="",
+                                                 filetypes=[
+                                                     ("PDF Files",""),
+                                                    #("PDF Files", "*.pdf"),
+                                                    #("All Files", "*.*"),
+                                                    ]
+                                                 )
+        if file_path:
+            form_docx_to_pdf_handler(form_data, file_path)
+            print("Form data saved successfully to:", file_path)
 
         # Display success message
         self.status_label.configure(text="Data saved successfully!",

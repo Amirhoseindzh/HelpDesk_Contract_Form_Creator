@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
-from form_handler import form_docx_to_pdf_handler, form_saveto_docx_handler
+from form_handler import form_docx_to_pdf_handler
+from config import ICON_PATH
 
 
 class App(ctk.CTk):
@@ -10,19 +11,21 @@ class App(ctk.CTk):
 
     def __init__(self):
         super().__init__()
-        self.title("cumputer services")
-        self.maxsize(500, 500)
-        self.minsize(500, 500)
-        self.window_width = 500
-        self.window_height = 500
+        self.title("Computer Services")
+        self.maxsize(500, 570)
+        self.minsize(500, 570)
+        self.window_width = 570
+        self.window_height = 570
 
         # add widgets to main window
-        self.add_widgets()
-
-        # Center the main window
-        self.center_window()
+        self.add_widgets()  # add widgets to main window
+        self.setup_icon()  # change icon
+        self.center_window()  # Center the main window
 
     # add methods to app
+    def setup_icon(self):  # initialize icon
+        if ICON_PATH:
+            self.iconbitmap(ICON_PATH)
 
     def add_widgets(self):
         button_crform = ctk.CTkButton(self, text="Create Form",
@@ -34,6 +37,12 @@ class App(ctk.CTk):
                                        command=self.dialog_search,
                                        width=200, height=100)
         button_srforms.grid(row=1, column=1, padx=1, pady=200)
+
+        author_label = ctk.CTkLabel(self,
+                                    text="""Author Email: amirdej6@gmail.com .
+                                    \nAuthor Social Acc: @amirhoseindzh.""")
+        author_label.grid(row=2, column=0, padx=15, pady=0, sticky="w")
+        author_label.configure(text_color="lightblue")
 
     def center_window(self):
         screen_width = self.winfo_screenwidth()
@@ -54,7 +63,7 @@ class App(ctk.CTk):
 
     def dialog_create_form(self):
         dialog = FormDialog(self, title="Create Form")
-        self.center_dialog(dialog, 300, 400)
+        self.center_dialog(dialog, 400, 300)
         dialog.grab_set()  # Grab focus, disable interactions with main window
         dialog.wait_window()  # Wait until the dialog is closed
         self.grab_release()  # Release focus, enable interactions with main window
@@ -62,13 +71,13 @@ class App(ctk.CTk):
     @staticmethod
     def dialog_search():
         dialog = ctk.CTkInputDialog(text="Search Forms:", title="Search")
-        App.center_dialog(dialog, 300, 200)
+        App.center_dialog(dialog, 400, 300)
         print("Search:", dialog.get_input())
 
 
 class FormDialog(ctk.CTkToplevel):
-    def __init__(self, parent, title):
-        super().__init__(parent)
+    def __init__(self, parent, title, **kwargs):
+        super().__init__(parent, **kwargs)
         self.title(title)
         self.maxsize(400, 420)
         self.minsize(400, 420)
@@ -109,6 +118,7 @@ class FormDialog(ctk.CTkToplevel):
             self, text="Submit", command=self.submit_form)
         submit_button.grid(row=len(fields) + 2, columnspan=2, padx=6, pady=0)
 
+
     def submit_form(self):
         for entry_name, entry_widget in self.entries.items():
             if isinstance(entry_widget, ctk.CTkEntry) and not entry_widget.get():
@@ -127,29 +137,29 @@ class FormDialog(ctk.CTkToplevel):
         }
         ]
 
-        # Clear entry fields
-        for entry_widget in self.entries.values():
-            if isinstance(entry_widget, ctk.CTkEntry):
-                entry_widget.delete(0, 'end')
-            elif isinstance(entry_widget, ctk.CTkTextbox):
-                entry_widget.delete('1.0', 'end')
-
         # Save form data to file
-
         file_path = filedialog.asksaveasfilename(defaultextension="",
                                                  filetypes=[
-                                                     ("PDF Files",""),
-                                                    #("PDF Files", "*.pdf"),
-                                                    #("All Files", "*.*"),
-                                                    ]
+                                                     ("PDF", ""),
+                                                     # ("PDF Files", "*.pdf"),
+                                                     # ("All Files", "*.*"),
+                                                 ]
                                                  )
         if file_path:
             form_docx_to_pdf_handler(form_data, file_path)
             print("Form data saved successfully to:", file_path)
-
-        # Display success message
-        self.status_label.configure(text="Data saved successfully!",
-                                    text_color="green")
+            # Display success message
+            self.status_label.configure(text="Data saved successfully!",
+                                        text_color="green")
+            # Clear entry fields
+            for entry_widget in self.entries.values():
+                if isinstance(entry_widget, ctk.CTkEntry):
+                    entry_widget.delete(0, 'end')
+                elif isinstance(entry_widget, ctk.CTkTextbox):
+                    entry_widget.delete('1.0', 'end')
+        else:
+            self.status_label.configure(text="cancled",
+                                        text_color="red")
 
 
 app = App()

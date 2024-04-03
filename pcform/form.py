@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
+from data_store import PcFormDatabase
 from form_handler import form_docx_to_pdf_handler
 from config import ICON_PATH
 
@@ -82,12 +83,13 @@ class FormDialog(ctk.CTkToplevel):
         self.maxsize(400, 420)
         self.minsize(400, 420)
         self.entries = {}
+        self.pcform_db = PcFormDatabase
 
         fields = [
             ("Full Name:", "fullname"),
             ("Device Model:", "device_model"),
             ("Device Serial Number:", "device_serial"),
-            ("Service Man Full Name:", "serviceman"),
+            ("ServiceMan FullName:", "serviceman"),
             ("Device Problem:", "device_problem")
         ]
 
@@ -118,7 +120,6 @@ class FormDialog(ctk.CTkToplevel):
             self, text="Submit", command=self.submit_form)
         submit_button.grid(row=len(fields) + 2, columnspan=2, padx=6, pady=0)
 
-
     def submit_form(self):
         for entry_name, entry_widget in self.entries.items():
             if isinstance(entry_widget, ctk.CTkEntry) and not entry_widget.get():
@@ -129,7 +130,7 @@ class FormDialog(ctk.CTkToplevel):
                 messagebox.showerror("Error", "Please fill out all fields.")
                 return
 
-        form_data = [{
+        self.form_data = [{
             entry_name: entry_widget.get()
             if isinstance(entry_widget, ctk.CTkEntry)
             else entry_widget.get("1.0", "end-1c")
@@ -146,7 +147,10 @@ class FormDialog(ctk.CTkToplevel):
                                                  ]
                                                  )
         if file_path:
-            form_docx_to_pdf_handler(form_data, file_path)
+            # create and insert data table in db
+            self.pcform_db.insert_pcform(self.get_data())
+            # create pdf from docx file
+            form_docx_to_pdf_handler(self.get_data(), file_path)
             print("Form data saved successfully to:", file_path)
             # Display success message
             self.status_label.configure(text="Data saved successfully!",
@@ -160,6 +164,9 @@ class FormDialog(ctk.CTkToplevel):
         else:
             self.status_label.configure(text="cancled",
                                         text_color="red")
+
+    def get_data(self):
+        return self.form_data
 
 
 app = App()

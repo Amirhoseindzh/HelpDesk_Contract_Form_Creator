@@ -1,7 +1,9 @@
+import sqlite3
 import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
+from tkinter import ttk
 from data_store import PcFormDatabase
 from form_handler import form_docx_to_pdf_handler
 from config import ICON_PATH
@@ -69,11 +71,9 @@ class App(ctk.CTk):
         dialog.wait_window()  # Wait until the dialog is closed
         self.grab_release()  # Release focus, enable interactions with main window
 
-    @staticmethod
-    def dialog_search():
-        dialog = ctk.CTkInputDialog(text="Search Forms:", title="Search")
-        App.center_dialog(dialog, 400, 300)
-        print("Search:", dialog.get_input())
+    def dialog_search(self):
+        main_frame = SearchMainFrame(self, title="Search Forms")
+        App.center_dialog(main_frame, 600, 600)
 
 
 class FormDialog(ctk.CTkToplevel):
@@ -167,6 +167,97 @@ class FormDialog(ctk.CTkToplevel):
 
     def get_data(self):
         return self.form_data
+
+
+class SearchMainFrame(ctk.CTkToplevel):
+    def __init__(self, parent, title):
+        super().__init__(parent)
+        self.title(title)
+        self.maxsize(800, 800)
+        self.minsize(800, 800)
+
+        self.search_frame = SearchForm(self)
+        self.search_frame.pack(fill="x", padx=10, pady=10)
+
+        self.detail_button = ctk.CTkButton(
+            self, text="Show Detail", command=self.toggle_detail)
+        self.detail_button.pack(pady=10)
+
+        self.database_frame = DatabaseInfo(self)
+        self.database_frame.pack(fill="both", padx=10, pady=10)
+        self.hide_database_info()
+
+    def toggle_detail(self):
+        if self.database_frame.winfo_ismapped():
+            self.hide_database_info()
+            self.detail_button.configure(text="Show Detail")
+        else:
+            self.show_database_info()
+            self.detail_button.configure(text="Hide Detail")
+
+    def show_database_info(self):
+        self.database_frame.pack(fill="both", padx=10, pady=10)
+
+    def hide_database_info(self):
+        self.database_frame.pack_forget()
+
+
+class SearchForm(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        # self.label = ctk.CTkLabel(self, text="Search:")
+        # self.label.pack(side="")
+
+        self.entry = ctk.CTkEntry(self, width=200)
+        self.entry.pack(side="top", padx=1, pady=2)
+
+        self.search_button = ctk.CTkButton(
+            self, text="Search", command=self.search)
+        self.search_button.pack(side="top", padx=2, pady=1)
+
+        self.database_frame = DatabaseInfo(self)
+        self.database_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    def search(self):
+        query = self.entry.get()
+        # Implement search functionality here
+        self.database_frame.search(query)
+        print("Searching for:", query)
+
+
+class DatabaseInfo(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.title_list = PcFormDatabase.get_column_titles()
+        # Adjust columns as needed
+        self.tree = ttk.Treeview(self, columns=self.title_list)
+        # self.tree.heading('#0', text='ID')
+        for i, column in enumerate(self.title_list):
+            self.tree.heading(f'#{i}', text=column)
+
+        # Populate Treeview with data
+        self.populate_treeview()
+        self.tree.pack(fill='both', expand=True)
+
+    def populate_treeview(self):
+        # Fetch data from database
+        rows = PcFormDatabase.treeview()
+        # Insert fetched data into treeview
+        for row in rows:
+            # Assuming first column is ID
+            self.tree.insert('', 'end', text=row[0], values=row[1:])
+
+    def search(self, query):
+        self.tree.delete(*self.tree.get_children())
+        try:
+            rows = PcFormDatabase._search(query)
+            for row in rows:
+                # Assuming first column is ID
+                self.tree.insert('', 'end', text=row[0], values=row[1:])
+        except sqlite3.Error as e:
+            print("Error searching data from SQLite:", e)
 
 
 app = App()

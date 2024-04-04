@@ -48,3 +48,41 @@ class PcFormDatabase:
                 conn.rollback()
             finally:
                 conn.close()
+
+    @staticmethod
+    def treeview():
+        # Update with your database path
+        conn = sqlite3.connect(PCFORM_DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM pcform")
+        rows = cursor.fetchall()
+        conn.close()
+        return rows
+
+    @staticmethod
+    # get columns name to show in search results
+    def get_column_titles(table_name="pcform"):
+        try:
+            # Update with your database path
+            conn = sqlite3.connect(PCFORM_DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            columns = cursor.fetchall()
+            conn.close()
+
+            column_titles = [column[1] for column in columns]
+            return column_titles
+        except sqlite3.Error as e:
+            print("Error fetching column titles:", e)
+            return []
+
+    @staticmethod
+    def _search(query):
+        # Update with your database path
+        conn = sqlite3.connect("your_database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM pcform WHERE Column1 LIKE ? OR Column2 LIKE ? OR Column3 LIKE ?",
+                       ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
+        rows = cursor.fetchall()
+        conn.close()
+        return rows

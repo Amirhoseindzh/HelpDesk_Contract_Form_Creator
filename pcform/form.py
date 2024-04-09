@@ -1,5 +1,3 @@
-import sqlite3
-import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
@@ -11,7 +9,6 @@ from config import ICON_PATH
 
 class App(ctk.CTk):
     ctk.set_appearance_mode("system")
-
     def __init__(self):
         super().__init__()
         self.title("Computer Services")
@@ -82,9 +79,10 @@ class FormDialog(ctk.CTkToplevel):
         self.title(title)
         self.maxsize(400, 420)
         self.minsize(400, 420)
+        self.iconbitmap = self.setup_icon()
         self.entries = {}
         self.pcform_db = PcFormDatabase
-
+        
         fields = [
             ("Full Name:", "fullname"),
             ("Device Model:", "device_model"),
@@ -120,6 +118,11 @@ class FormDialog(ctk.CTkToplevel):
             self, text="Submit", command=self.submit_form)
         submit_button.grid(row=len(fields) + 2, columnspan=2, padx=6, pady=0)
 
+    def setup_icon(self):
+        # You can define ICON_PATH here if needed
+        if ICON_PATH:
+            self.iconbitmap(ICON_PATH)
+
     def submit_form(self):
         for entry_name, entry_widget in self.entries.items():
             if isinstance(entry_widget, ctk.CTkEntry) and not entry_widget.get():
@@ -141,8 +144,7 @@ class FormDialog(ctk.CTkToplevel):
         # Save form data to file
         file_path = filedialog.asksaveasfilename(defaultextension="",
                                                  filetypes=[
-                                                     ("PDF", ""),
-                                                     # ("PDF Files", "*.pdf"),
+                                                     ("PDF (*.pdf)", ""),
                                                      # ("All Files", "*.*"),
                                                  ]
                                                  )
@@ -173,9 +175,9 @@ class SearchMainFrame(ctk.CTkToplevel):
     def __init__(self, parent, title):
         super().__init__(parent)
         self.title(title)
-        self.maxsize(800, 800)
         self.minsize(800, 800)
-
+        #self.maxsize(800, 800)
+        self.iconbitmap = self.setup_icon()
         self.search_frame = SearchForm(self)
         self.search_frame.pack(fill="x", padx=10, pady=10)
 
@@ -186,6 +188,11 @@ class SearchMainFrame(ctk.CTkToplevel):
         self.database_frame = DatabaseInfo(self)
         self.database_frame.pack(fill="both", padx=10, pady=10)
         self.hide_database_info()
+
+    def setup_icon(self):
+        # You can define ICON_PATH here if needed
+        if ICON_PATH:
+            self.iconbitmap(ICON_PATH)
 
     def toggle_detail(self):
         if self.database_frame.winfo_ismapped():
@@ -205,10 +212,6 @@ class SearchMainFrame(ctk.CTkToplevel):
 class SearchForm(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
-
-        # self.label = ctk.CTkLabel(self, text="Search:")
-        # self.label.pack(side="")
-
         self.entry = ctk.CTkEntry(self, width=200)
         self.entry.pack(side="top", padx=1, pady=2)
 
@@ -221,6 +224,7 @@ class SearchForm(ctk.CTkFrame):
 
     def search(self):
         query = self.entry.get()
+
         # Implement search functionality here
         self.database_frame.search(query)
         print("Searching for:", query)
@@ -251,14 +255,20 @@ class DatabaseInfo(ctk.CTkFrame):
 
     def search(self, query):
         self.tree.delete(*self.tree.get_children())
-        try:
-            rows = PcFormDatabase._search(query)
-            for row in rows:
-                # Assuming first column is ID
-                self.tree.insert('', 'end', text=row[0], values=row[1:])
-        except sqlite3.Error as e:
-            print("Error searching data from SQLite:", e)
+        search_columns = ["fullname", "Device_Model", "Device_Serial",
+            "ServiceMan", "Device_Problem", "Description"]
+        search_result = PcFormDatabase._search(search_columns, query)
+
+        if search_result:
+            for row in self.tree.get_children(): # Clear existing rows in the tree
+                self.tree.delete(row)
+            for item in search_result:  # Insert new rows with the search results
+                self.tree.insert('', 'end',text=item[0], values=item[1:])
+        else:
+            self.tree.insert('', 'end', values=("\t\tNo results found.",))
 
 
-app = App()
-app.mainloop()
+def main():
+    app = App()
+    app.mainloop()
+    

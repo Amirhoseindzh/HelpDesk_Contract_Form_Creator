@@ -1,7 +1,6 @@
 import sqlite3
 from config import PCFORM_DB_PATH
 
-
 class PcFormDatabase:
 
     @staticmethod
@@ -52,7 +51,7 @@ class PcFormDatabase:
     @staticmethod
     def treeview():
         # Update with your database path
-        conn = sqlite3.connect(PCFORM_DB_PATH)
+        conn = PcFormDatabase.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM pcform")
         rows = cursor.fetchall()
@@ -64,7 +63,7 @@ class PcFormDatabase:
     def get_column_titles(table_name="pcform"):
         try:
             # Update with your database path
-            conn = sqlite3.connect(PCFORM_DB_PATH)
+            conn = PcFormDatabase.connect()
             cursor = conn.cursor()
             cursor.execute(f"PRAGMA table_info({table_name})")
             columns = cursor.fetchall()
@@ -77,12 +76,24 @@ class PcFormDatabase:
             return []
 
     @staticmethod
-    def _search(query):
-        # Update with your database path
-        conn = sqlite3.connect("your_database.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM pcform WHERE Column1 LIKE ? OR Column2 LIKE ? OR Column3 LIKE ?",
-                       ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
-        rows = cursor.fetchall()
-        conn.close()
+    def _search(columns, query):
+        try:
+            conn = PcFormDatabase.connect()
+            c = conn.cursor()
+
+           # Construct the SQL query dynamically
+            sql_query = "SELECT * FROM pcform WHERE "
+            sql_query += " OR ".join([f"{column} LIKE ?" for column in columns])
+
+            # Execute the query with the search query as parameter
+        # Supply the same number of bindings as the number of search_columns
+            bindings = ['%' + query + '%'] * len(columns)
+            c.execute(sql_query, bindings)
+            rows = c.fetchall()
+        except sqlite3.Error as e:
+            print("SQLite error:", e)
+            return None
+        finally:
+            if conn:
+                conn.close()
         return rows

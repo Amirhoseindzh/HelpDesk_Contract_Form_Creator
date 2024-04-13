@@ -1,3 +1,5 @@
+from config import ICON_PATH
+from data_store import PcFormDatabase
 from tkinter import messagebox
 import customtkinter as ctk
 import re
@@ -42,8 +44,8 @@ class LoginForm(ctk.CTkFrame):
             return
 
         # Here you would implement your actual authentication logic
-        # For demonstration purposes, let's assume username is "admin" and password is "password"
-        if username == "admin" and password == "password":
+        data_filter = PcFormDatabase.auth_data_retrieve(username, password)
+        if data_filter== True:
             self.error_label.configure(text="")
             messagebox.showinfo("Success", "Login successful!")
             self.on_login_success()
@@ -54,7 +56,7 @@ class LoginForm(ctk.CTkFrame):
         # Load saved username if available
         # Here you would implement loading saved username from a file or database
         # For demonstration purposes, let's assume there is a saved username
-        saved_username = "admin"
+        saved_username = PcFormDatabase.load_last_username()
         self.username_entry.insert(0, saved_username)
 
 
@@ -95,7 +97,7 @@ class RegisterForm(ctk.CTkFrame):
         username = self.username_entry.get()
         password = self.password_entry.get()
         confirm_password = self.confirm_password_entry.get()
-
+        entries_list = [{"username": username, "password": password}]
         # Perform validation
         if not username or not password or not confirm_password:
             self.error_label.configure(text="All fields are required.")
@@ -116,6 +118,14 @@ class RegisterForm(ctk.CTkFrame):
             return
 
         # Here you would implement your actual registration logic
+        user_exists = PcFormDatabase.check_user_exists(username)
+        if user_exists == False:
+            self.error_label.configure(
+                text=f"Username '{username}' is already exist.")
+            return
+        else:
+            PcFormDatabase.insert_pcform_auth(entries_list)
+
         # For demonstration purposes, let's just print the entered username and password
         print("Registered username:", username)
         print("Registered password:", password)
@@ -123,8 +133,9 @@ class RegisterForm(ctk.CTkFrame):
         messagebox.showinfo("Success", "Registration successful!")
         self.on_register_success()
 
+
 # import icon path
-from config import ICON_PATH
+
 
 class AuthApp(ctk.CTk):
 
@@ -204,4 +215,4 @@ class AuthApp(ctk.CTk):
 auth_app = AuthApp()
 auth_app.mainloop()
 
-#its developed by @amirhoseindzh
+# its developed by @amirhoseindzh

@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
 from tkinter import messagebox
@@ -5,10 +6,12 @@ from tkinter import ttk
 from data_store import PcFormDatabase
 from form_handler import form_docx_to_pdf_handler
 from config import ICON_PATH
+import webbrowser
 
 
 class App(ctk.CTk):
     ctk.set_appearance_mode("system")
+
     def __init__(self):
         super().__init__()
         self.title("Computer Services")
@@ -22,7 +25,54 @@ class App(ctk.CTk):
         self.setup_icon()  # change icon
         self.center_window()  # Center the main window
 
+        # Create Menu
+        self.create_menu()
+    # Define Menu theme settings
+
+    def create_menu(self):
+        menu_bar = tk.Menu(self)
+        self.config(menu=menu_bar)
+
+        file_menu = tk.Menu(menu_bar, tearoff=False)
+        menu_bar.add_cascade(label="File", menu=file_menu)
+
+        file_menu.add_command(label="About", command=self.about)
+        file_menu.add_command(
+            label="Logout", command=self.logout, foreground='red')
+
+    def logout(self):
+        messagebox.showinfo("Logout", "Logged out successfully!")
+
+    def about(self):
+        msg1 = " Author Email: amirdej6@gmail.com "
+        msg2 = "Author github Account: @Amirhoseindzh."
+        link_window = ctk.CTkToplevel(self)
+        link_window.title("About")
+        link_window.maxsize(360, 360)
+        link_window.minsize(360, 360)
+        self.window_width = 360
+        self.window_height = 360
+        self.center_dialog(link_window, self.window_width, self.window_height)
+
+        message1 = msg1
+        message2 = msg2
+        label1 = tk.Label(link_window, text=message1, cursor="hand2",
+                          fg="blue", font="TkDefaultFont 10 underline")
+        label1.pack(padx=20, pady=20)
+        label1.bind(
+            "<Button-1>", lambda event: self.open_link("https://gmail.com/"))
+
+        label2 = tk.Label(link_window, text=message2, cursor="hand2",
+                          fg="blue", font="TkDefaultFont 10 underline")
+        label2.pack(padx=20, pady=25)
+        label2.bind(
+            "<Button-1>", lambda event: self.open_link("https://github.com/Amirhoseindzh"))
+
+    def open_link(self, url):
+        webbrowser.open(url)
+
     # add methods to app
+
     def setup_icon(self):  # initialize icon
         if ICON_PATH:
             self.iconbitmap(ICON_PATH)
@@ -37,12 +87,6 @@ class App(ctk.CTk):
                                        command=self.dialog_search,
                                        width=200, height=100)
         button_srforms.grid(row=1, column=1, padx=1, pady=200)
-
-        author_label = ctk.CTkLabel(self,
-                                    text="""Author Email: amirdej6@gmail.com .
-                                    \nAuthor Social Acc: @amirhoseindzh.""")
-        author_label.grid(row=2, column=0, padx=15, pady=0, sticky="w")
-        author_label.configure(text_color="lightblue")
 
     def center_window(self):
         screen_width = self.winfo_screenwidth()
@@ -82,7 +126,7 @@ class FormDialog(ctk.CTkToplevel):
         self.iconbitmap = self.setup_icon()
         self.entries = {}
         self.pcform_db = PcFormDatabase
-        
+
         fields = [
             ("Full Name:", "fullname"),
             ("Device Model:", "device_model"),
@@ -176,7 +220,7 @@ class SearchMainFrame(ctk.CTkToplevel):
         super().__init__(parent)
         self.title(title)
         self.minsize(800, 800)
-        #self.maxsize(800, 800)
+        # self.maxsize(800, 800)
         self.iconbitmap = self.setup_icon()
         self.search_frame = SearchForm(self)
         self.search_frame.pack(fill="x", padx=10, pady=10)
@@ -256,14 +300,14 @@ class DatabaseInfo(ctk.CTkFrame):
     def search(self, query):
         self.tree.delete(*self.tree.get_children())
         search_columns = ["fullname", "Device_Model", "Device_Serial",
-            "ServiceMan", "Device_Problem", "Description"]
+                          "ServiceMan", "Device_Problem", "Description"]
         search_result = PcFormDatabase._search(search_columns, query)
 
         if search_result:
-            for row in self.tree.get_children(): # Clear existing rows in the tree
+            for row in self.tree.get_children():  # Clear existing rows in the tree
                 self.tree.delete(row)
             for item in search_result:  # Insert new rows with the search results
-                self.tree.insert('', 'end',text=item[0], values=item[1:])
+                self.tree.insert('', 'end', text=item[0], values=item[1:])
         else:
             self.tree.insert('', 'end', values=("\t\tNo results found.",))
 
@@ -271,4 +315,6 @@ class DatabaseInfo(ctk.CTkFrame):
 def main():
     app = App()
     app.mainloop()
-    
+
+
+main()

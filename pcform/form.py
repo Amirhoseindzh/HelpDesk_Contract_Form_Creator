@@ -1,3 +1,4 @@
+from cgitb import text
 import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk
@@ -19,8 +20,10 @@ class App(ctk.CTk):
         self.minsize(500, 570)
         self.window_width = 570
         self.window_height = 570
-
+        # Disable resizing to hide the maximize icon
+        self.resizable(False, False)
         # add widgets to main window
+
         self.add_widgets()  # add widgets to main window
         self.setup_icon()  # change icon
         self.center_window()  # Center the main window
@@ -42,27 +45,31 @@ class App(ctk.CTk):
 
     def logout(self):
         messagebox.showinfo("Logout", "Logged out successfully!")
+        self.destroy()  # close the main window
 
     def about(self):
-        msg1 = " Author Email: amirdej6@gmail.com "
-        msg2 = "Author github Account: @Amirhoseindzh."
         link_window = ctk.CTkToplevel(self)
         link_window.title("About")
         link_window.maxsize(360, 360)
         link_window.minsize(360, 360)
+        link_window.resizable(False, False)
         self.window_width = 360
         self.window_height = 360
         self.center_dialog(link_window, self.window_width, self.window_height)
+        if ICON_PATH:
+            link_window.iconbitmap(ICON_PATH)
+            # change 'about' icon (but its not changed)**
 
-        message1 = msg1
-        message2 = msg2
-        label1 = tk.Label(link_window, text=message1, cursor="hand2",
+        msg1 = " Developer Email: amirhosein.de78@gmail.com "
+        msg2 = " Developer github Account: @Amirhoseindzh."
+
+        label1 = tk.Label(link_window, text=msg1, cursor="hand2",
                           fg="blue", font="TkDefaultFont 10 underline")
         label1.pack(padx=20, pady=20)
         label1.bind(
             "<Button-1>", lambda event: self.open_link("https://gmail.com/"))
 
-        label2 = tk.Label(link_window, text=message2, cursor="hand2",
+        label2 = tk.Label(link_window, text=msg2, cursor="hand2",
                           fg="blue", font="TkDefaultFont 10 underline")
         label2.pack(padx=20, pady=25)
         label2.bind(
@@ -123,6 +130,7 @@ class FormDialog(ctk.CTkToplevel):
         self.title(title)
         self.maxsize(400, 420)
         self.minsize(400, 420)
+        self.resizable(False, False)
         self.iconbitmap = self.setup_icon()
         self.entries = {}
         self.pcform_db = PcFormDatabase
@@ -168,7 +176,7 @@ class FormDialog(ctk.CTkToplevel):
             self.iconbitmap(ICON_PATH)
 
     def submit_form(self):
-        for entry_name, entry_widget in self.entries.items():
+        for _, entry_widget in self.entries.items():
             if isinstance(entry_widget, ctk.CTkEntry) and not entry_widget.get():
                 messagebox.showerror("Error", "Please fill out all fields.")
                 return
@@ -315,6 +323,3 @@ class DatabaseInfo(ctk.CTkFrame):
 def main():
     app = App()
     app.mainloop()
-
-
-main()

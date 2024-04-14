@@ -1,6 +1,8 @@
 # local files
 local_*
-
+*.db
+*.sqlite
+*.sqlite3
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

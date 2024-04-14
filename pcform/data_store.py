@@ -1,7 +1,6 @@
 import sqlite3
 from config import PCFORM_DB_PATH
 
-
 class PcFormDatabase:
 
     @staticmethod

@@ -47,7 +47,7 @@ class LoginForm(ctk.CTkFrame):
         data_filter = PcFormDatabase.auth_data_retrieve(username, password)
         if data_filter== True:
             self.error_label.configure(text="")
-            messagebox.showinfo("Success", "Login successful!")
+            messagebox.showinfo("Success", f" '{username.capitalize()}' Loggedin successful!")
             self.on_login_success()
         else:
             self.error_label.configure(text="Invalid username or password.")
@@ -134,9 +134,6 @@ class RegisterForm(ctk.CTkFrame):
         self.on_register_success()
 
 
-# import icon path
-
-
 class AuthApp(ctk.CTk):
 
     def __init__(self):
@@ -146,8 +143,10 @@ class AuthApp(ctk.CTk):
         self.minsize(325, 260)
         self.window_width = 570
         self.window_height = 570
+        self.resizable(False, False)
 
         self.current_form = None
+
         # Add widgets to main window
         self.center_window()
         self.add_auth_widgets()
@@ -209,7 +208,7 @@ class AuthApp(ctk.CTk):
         # Run your app class after successful login or registration
         app = App()
         app.add_widgets()
-        app.mainloop()
+        app.mainloop()      
 
 
 auth_app = AuthApp()

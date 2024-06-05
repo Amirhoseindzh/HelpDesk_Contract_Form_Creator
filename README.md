@@ -9,7 +9,7 @@
 
 <div align="center">
 
-  <img src="assets/main.png" alt="Database Auth" height="500px">
+  <img src="assets/main.png" alt="Database Auth" height="400px">
 
 </div>
 
@@ -26,8 +26,8 @@ During my internship in a helpdesk position, I noticed that repair technicians n
 <table>
   <tr>
     <td><img src="assets/register.png" alt="Database Auth" height="200px"></td>
-    <td rowspan="3"><img src="assets/create form.png" alt="Reservation System" height="500px"></td>
-    <td rowspan="3"><img src="assets/search_form.png" alt="Reservation System" height="500px"></td>
+    <td rowspan="3"><img src="assets/create form.png" alt="Reservation System" height="350px"></td>
+    <td rowspan="3"><img src="assets/search_form.png" alt="Reservation System" height="350px"></td>
   </tr>
   <tr>
     <td><img src="assets/login.png" alt="Reservation System 1" height="200px"></td>

@@ -74,7 +74,7 @@ def convert_docx_to_pdf(docx_file_path, pdf_file_path):
 
 def form_docx_to_pdf_handler(data_list, destination_folder):
     # Generate a DOCX file with provided data
-    docx_file = form_saveto_docx_handler(data_list, destination_folder)
+    form_saveto_docx_handler(data_list, destination_folder)
     
     docx_file_path = f"{destination_folder}.docx"
     docx_file_path = os.path.abspath(docx_file_path)
@@ -87,7 +87,7 @@ def form_docx_to_pdf_handler(data_list, destination_folder):
 
     elif not docx_file_path:
         print("Error: DOCX file path is invalid or empty.")
-        return
+        
     # Convert the DOCX file to PDF
     
     

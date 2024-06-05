@@ -1,4 +1,3 @@
-from cgitb import text
 import tkinter as tk
 from tkinter import filedialog
 import customtkinter as ctk

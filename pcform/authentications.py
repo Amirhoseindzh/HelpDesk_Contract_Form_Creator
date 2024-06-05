@@ -45,7 +45,7 @@ class LoginForm(ctk.CTkFrame):
 
         # Here you would implement your actual authentication logic
         data_filter = PcFormDatabase.auth_data_retrieve(username, password)
-        if data_filter== True:
+        if data_filter:
             self.error_label.configure(text="")
             messagebox.showinfo("Success", f" '{username.capitalize()}' Loggedin successful!")
             self.on_login_success()
@@ -119,7 +119,7 @@ class RegisterForm(ctk.CTkFrame):
 
         # Here you would implement your actual registration logic
         user_exists = PcFormDatabase.check_user_exists(username)
-        if user_exists == False:
+        if not user_exists:
             self.error_label.configure(
                 text=f"Username '{username}' is already exist.")
             return
@@ -211,7 +211,6 @@ class AuthApp(ctk.CTk):
         app.mainloop()      
 
 
-auth_app = AuthApp()
-auth_app.mainloop()
+
 
 # its developed by @amirhoseindzh

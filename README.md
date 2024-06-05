@@ -42,7 +42,7 @@ During my internship in a helpdesk position, I noticed that repair technicians n
 ## Installation
 1. Follow the steps below to install app perfectly:
 ```shell
- > git clone https://github.com/Amirhoseindzh/Computer_Services_Repair_Form
+ > git clone https://github.com/Amirhoseindzh/HelpDesk_Contract_Form_Creator
 
  > pip install requirements.txt
 

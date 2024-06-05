@@ -25,15 +25,15 @@ During my internship in a helpdesk position, I noticed that repair technicians n
 
 <table>
   <tr>
-    <td><img src="assets/register.png" alt="Database Auth" height="200px"></td>
-    <td rowspan="3"><img src="assets/create form.png" alt="Reservation System" height="350px"></td>
-    <td rowspan="3"><img src="assets/search_form.png" alt="Reservation System" height="350px"></td>
+    <td><img src="assets/register.png" alt="register window" height="200px"></td>
+    <td rowspan="3"><img src="assets/create.png" alt="create form" height="350px"></td>
+    <td rowspan="3"><img src="assets/search_form.png" alt="search form" height="350px"></td>
   </tr>
   <tr>
-    <td><img src="assets/login.png" alt="Reservation System 1" height="200px"></td>
+    <td><img src="assets/login.png" alt="login window" height="200px"></td>
   </tr>
   <tr>
-    <td><img src="assets/result.png" alt="Reservation System 4" height="200px"></td>
+    <td><img src="assets/result.png" alt="result pdf" height="200px"></td>
   </tr>
 </table>
     

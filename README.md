@@ -44,7 +44,7 @@ During my internship in a helpdesk position, I noticed that repair technicians n
 ```shell
  > git clone https://github.com/Amirhoseindzh/HelpDesk_Contract_Form_Creator
 
- > pip install requirements.txt
+ > pip install -r requirements.txt
 
  > python3 main.py
 ```

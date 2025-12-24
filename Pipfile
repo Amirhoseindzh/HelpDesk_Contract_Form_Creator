@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+customtkinter = "==5.2.2"
+darkdetect = "==0.8.0"
+jdatetime = "==5.2.0"
+packaging = "==25.0"
+pillow = "==12.0.0"
+python-docx = "==1.2.0"
+pywin32 = "==311"
+openpyxl = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.14"

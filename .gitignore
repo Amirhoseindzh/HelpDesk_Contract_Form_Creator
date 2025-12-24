@@ -8,6 +8,8 @@ local_*
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode
+*.xmind
 
 # C extensions
 *.so

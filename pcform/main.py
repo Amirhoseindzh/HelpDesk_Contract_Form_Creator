@@ -1,6 +1,10 @@
-from authentications import AuthApp
+from authentications import AuthWindow
+
+
+def main():
+    app = AuthWindow()
+    app.mainloop()
 
 
 if __name__ == "__main__":
-    auth_app = AuthApp()
-    auth_app.mainloop()
+    main()

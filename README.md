@@ -1,70 +1,158 @@
-<h1 align="center">
-    <a href=""> HelpDesk Contract Form Creator</a>
-</h1>
+This project is a lightweight desktop application for creating and managing help‑desk repair contracts. It provides a simple form for entering contract details, saves records to an SQLite database, and supports exporting contracts to PDF, Excel, and CSV.
 
-<p align="center">
-  <i align="center">
-    this project is for help desk and computer repair mans 🚀</i>
-</p>
+![Search Form](assets/search_form.png){width=700 style="display: block; margin: 0 auto"}
 
-<div align="center">
+## ----------------------------------------------------       Output      -----------------------------------------------------
 
-  <img src="assets/main.png" alt="Database Auth" height="400px">
+![Output](assets/output_pdf.png){width=300 style="display: block; margin: 0 auto"}
 
-</div>
+## Features
 
-## Introduction
-During my internship in a helpdesk position, I noticed that repair technicians needed a software solution to easily create contract forms while saving the date and time automatically. This inspired me to start a project using Python and the custom-tkinter library to develop a simple and efficient software tool. The result is a user-friendly application that meets these needs. I hope you enjoy it! :)
+- User authentication (login / register)
+- Create service contract forms with automatic timestamps
+- Store and retrieve records from SQLite
+- Export to PDF, Excel (.xlsx) and CSV
+- Persian font support and RTL-friendly display where configured
+- View full contract details in a dedicated window
 
+## Prerequisites
 
-<details open>
-<summary>
- Features
-</summary> <br />
+- Python 3.8+
+- pip or pipenv
+- Windows is required for COM-based DOCX→PDF conversion (pywin32)
 
+## Quick Start
 
-<table>
-  <tr>
-    <td><img src="assets/register.png" alt="register window" height="200px"></td>
-    <td rowspan="3"><img src="assets/create.png" alt="create form" height="350px"></td>
-    <td rowspan="3"><img src="assets/search_form.png" alt="search form" height="350px"></td>
-  </tr>
-  <tr>
-    <td><img src="assets/login.png" alt="login window" height="200px"></td>
-  </tr>
-  <tr>
-    <td><img src="assets/result.png" alt="result pdf" height="200px"></td>
-  </tr>
-</table>
-    
-</details>
+Clone the repository and run the app:
 
-## Installation
-1. Follow the steps below to install app perfectly:
-```shell
- > git clone https://github.com/Amirhoseindzh/Computer_Services_Repair_Form
+````bash
+git clone https://github.com/Amirhoseindzh/Computer_Services_Repair_Form.git
+﻿# HelpDesk Contract Form Creator
 
- > pip install requirements.txt
+This project is a lightweight desktop application for creating and managing help‑desk repair contracts. It provides a simple form for entering contract details, saves records to an SQLite database, and supports exporting contracts to PDF, Excel, and CSV.
 
- > python3 main.py
+## Features
+
+- User authentication (login / register)
+- Create service contract forms with automatic timestamps
+- Store and retrieve records from SQLite
+- Export to PDF, Excel (.xlsx) and CSV
+- Persian font support and RTL-friendly display where configured
+- View full contract details in a dedicated window
+
+## Prerequisites
+
+- Python 3.8+
+- pip or pipenv
+- Windows is required for COM-based DOCX→PDF conversion (pywin32)
+
+## Quick Start
+
+Clone the repository and run the app:
+
+```bash
+git clone https://github.com/Amirhoseindzh/Computer_Services_Repair_Form.git
+cd Computer_Services_Repair_Form
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python pcform/main.py
+````
+
+Or with pipenv:
+
+```bash
+pipenv install
+pipenv shell
+pipenv run python pcform/main.py
 ```
 
+## Configuration
 
-## Resources
+Edit `pcform/settings/config.py` to customize:
 
-- **[YouTube](https://www.youtube.com/)** for guides.
-- **[Google](https://www.google.com/)** for guides.
-- **[Github](https://www.github.com/)** for guides.
-- Chatgpt for guides.
+- `PERSIAN_FONT` — font family used for Persian text
+- `LOGO_PATH` — path to logo used in exports
+- `PDF_TERMS_AND_CONDITIONS` — path to the terms document included in PDFs
+- `PCFORM_DB_PATH` — path to the SQLite database file
 
-<a name="contributing_anchor"></a>
+## Usage
+
+1. Login or register an account
+2. Create a new contract using the Create Form
+3. Use the Search window to find existing records
+4. Select a record to view details or export to PDF/Excel/CSV
+
+## Notes on PDF export
+
+- DOCX → PDF conversion uses Windows automation (pywin32). On non‑Windows systems export to DOCX is supported, but automatic PDF conversion may not work.
+
+## Optional Dependencies
+
+- `openpyxl` — Excel export support (recommended)
+- `pywin32` — required for DOCX→PDF conversion on Windows
+
+Install optional packages with:
+
+```bash
+pip install openpyxl pywin32
+```
+
+## Code structure
+
+📦pcform
+┣ 📂create_form
+┃ ┣ 📜form.py
+┃
+┣ 📂exports
+┃ ┣ 📂sections
+┃ ┃ ┣ 📜base_section.py
+┃ ┃ ┣ 📜device_section.py
+┃ ┃ ┣ 📜parties_section.py
+┃ ┃ ┣ 📜problem_section.py
+┃ ┃ ┣ 📜signature_section.py
+┃ ┃ ┣ 📜terms_section.py
+┃ ┃
+┃ ┣ 📜document_generator.py
+┃ ┣ 📜pdf_converter.py
+┃ ┣ 📜styles.py
+┃
+┣ 📂repositories
+┃ ┣ 📜base_repo.py
+┃ ┣ 📜pcform_repo.py
+┃ ┣ 📜user_repo.py
+┃
+┣ 📂search_form
+┃ ┣ 📜database_info.py
+┃ ┣ 📜search.py
+┃
+┣ 📂services
+┃ ┣ 📜auth_service.py
+┃ ┣ 📜database.py
+┃
+┣ 📂settings
+┃ ┣ 📂db
+┃ ┃ ┗ 📜pcform_db.db
+┃ ┣ 📂icons
+┃ ┃ ┣ 📜banana.ico
+┃ ┃ ┗ 📜banana.png
+┃ ┣ 📜config.py
+┃
+┣ 📂utils
+┃ ┣ 📜mixins.py
+┃ ┣ 📜security.py
+┃ ┣ 📜widget_utils.py
+┃
+┣ 📜app.py
+┣ 📜authentications.py
+┣ 📜main.py
+
 ## Contributing
 
-Help-Desk Contract Form is an open-source project. I committed to a fully transparent development process and highly appreciate any contributions. Whether you are helping me fix bugs, proposing new features, improving my documentation or spreading the word - we would love to have you as a part of the Airline-booking community. 
-
-- Bug Report: If you see an error message or encounter an issue while using Amplication, please create a [bug report](https://github.com/Amirhoseindzh/Airline-Booking/issues/2#issue-2271571036).
-
+Bug reports, feature requests and pull requests are welcome. Please open issues or PRs on the project GitHub.
 
 ## License
 
-A large part of this project is licensed under the [Apache 2.0](./LICENSE) license. 
+This project is licensed under the Apache‑2.0 license. See `LICENSE` for details.
